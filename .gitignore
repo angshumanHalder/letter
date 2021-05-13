@@ -13,3 +13,5 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+/back-end/conf/config.yml
+/back-end/back-end
