@@ -4,7 +4,6 @@ import { fontConfig } from "./Fonts";
 export const theme = {
   ...DefaultTheme,
   fonts: configureFonts(fontConfig),
-  roundness: 30,
   colors: {
     ...DefaultTheme.colors,
     primary: "#505050",

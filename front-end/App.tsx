@@ -7,6 +7,10 @@ import {
 import { theme } from "./CustomProperties/Theme";
 import { Chat } from "./Screens/Chat";
 import { Users } from "./Screens/Users";
+import { QueryClientProvider, QueryClient } from "react-query";
+import { Register } from "./Screens/Register";
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const [index, setIndex] = useState(0);
@@ -23,20 +27,17 @@ export default function App() {
   return (
     <PaperProvider theme={theme}>
       <StatusBar />
-      <BottomNavigation
-        navigationState={{ index, routes }}
-        onIndexChange={setIndex}
-        renderScene={renderScene}
-      />
+      <Register />
+      {/*
+      <QueryClientProvider client={queryClient}>
+
+        <BottomNavigation
+          navigationState={{ index, routes }}
+          onIndexChange={setIndex}
+          renderScene={renderScene}
+        />
+      </QueryClientProvider>
+          */}
     </PaperProvider>
   );
 }
-
-//const styles = StyleSheet.create({
-//container: {
-//flex: 1,
-//backgroundColor: "#fff",
-//alignItems: "center",
-//justifyContent: "center",
-//},
-//});
