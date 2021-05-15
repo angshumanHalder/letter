@@ -75,6 +75,7 @@ func (u *User) registerHandler(c *gin.Context) {
 		Id:       primitive.NewObjectID(),
 		Username: reqBody.Username,
 		Phone:    reqBody.Phone,
+		Verified: false,
 	}
 	_, err = collection.InsertOne(ctx, user)
 	if err != nil {
@@ -93,7 +94,7 @@ func (u *User) registerHandler(c *gin.Context) {
 }
 
 // TODO: use parse jwt token from middle ware to get logged in user details
-func (u *User) meHandler(c *gin.Context) {
+func (u *User) getUser(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 
@@ -162,7 +163,7 @@ func (u *User) generateOtp(c *gin.Context) {
 
 	conn := u.Pool.Get()
 	defer conn.Close()
-	_, err = conn.Do("SET", user.Username, otp)
+	_, err = conn.Do("SET", user.Phone, otp)
 	if err != nil {
 		response = utils.Response{
 			Success: true,
@@ -225,6 +226,11 @@ func (u *User) verifyOtp(c *gin.Context) {
 	if err := collection.FindOne(ctx, bson.M{"phone": otp.Phone}).Decode(&user); err != nil {
 		c.JSON(http.StatusInternalServerError, err.Error())
 		return
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": user.Id}, bson.D{primitive.E{Key: "$set", Value: bson.D{primitive.E{Key: "verified", Value: true}}}})
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 
 	uId := user.Id.Hex()
