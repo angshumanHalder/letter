@@ -10,5 +10,5 @@ func init() {
 }
 
 func GenerateOTP() int {
-	return rand.Intn(9999)
+	return rand.Intn(9999-1000) + 1000
 }

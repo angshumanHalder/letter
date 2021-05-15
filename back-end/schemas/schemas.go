@@ -6,4 +6,5 @@ type UserSchema struct {
 	Id       primitive.ObjectID `bson:"_id"`
 	Username string             `bson:"username, omitempty"`
 	Phone    string             `bson:"phone, omitempty"`
+	Verified bool               `bson:"verified"`
 }
