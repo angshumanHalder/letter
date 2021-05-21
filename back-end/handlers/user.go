@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -47,6 +48,7 @@ func (u *User) Initialize() {
 }
 
 func (u *User) registerHandler(c *gin.Context) {
+	fmt.Println("registerHandler")
 	var reqBody Register
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -85,6 +87,22 @@ func (u *User) registerHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
+	// TODO: Refactor into a separate function
+	otp := utils.GenerateOTP()
+
+	conn := u.Pool.Get()
+	defer conn.Close()
+	_, err = conn.Do("SET", user.Phone, otp)
+	if err != nil {
+		response = utils.Response{
+			Success: true,
+			Errors:  []string{err.Error()},
+		}
+		c.JSON(http.StatusInternalServerError, response)
+		return
+	}
+
+	fmt.Println("otp", otp)
 
 	response = utils.Response{
 		Success: true,
@@ -168,7 +186,7 @@ func (u *User) generateOtp(c *gin.Context) {
 			Success: true,
 			Errors:  []string{err.Error()},
 		}
-		c.JSON(http.StatusInternalServerError, err.Error())
+		c.JSON(http.StatusInternalServerError, response)
 	}
 
 	response = utils.Response{

@@ -1,4 +1,4 @@
-import { Contact, PhoneNumber } from "expo-contacts";
+import { Contact } from "expo-contacts";
 import { flatten } from "../utils/flattenArray";
 
 export const getUsers = async (contacts: Contact[]) => {
