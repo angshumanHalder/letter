@@ -5,6 +5,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 
 	conf "github.com/angshumanHalder/letter/back-end/conf"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	RouteHandlers "github.com/angshumanHalder/letter/back-end/handlers"
@@ -27,6 +28,7 @@ func main() {
 
 func newRouter() *gin.Engine {
 	r := gin.Default()
+	r.Use(cors.Default())
 	RouteHandlers.UserHandlers(r, db, pool)
 	return r
 }
