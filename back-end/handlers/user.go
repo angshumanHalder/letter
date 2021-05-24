@@ -26,12 +26,19 @@ type VerifyOTP struct {
 	Otp string `validate:"required"`
 }
 
+type GetUsers struct {
+	Phones []string `validate:"required"`
+}
+
 var collection *mongo.Collection
+var tokenCollection *mongo.Collection
 var response utils.Response
 
 const timeout = 5 * time.Second
 
 func (u *User) Initialize() {
 	const collectionName = "users"
+	const tokenCollectionName = "tokens"
 	collection = u.DB.Collection(collectionName)
+	tokenCollection = u.DB.Collection(tokenCollectionName)
 }

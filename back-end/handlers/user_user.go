@@ -15,14 +15,14 @@ func (u *User) getUser() gin.HandlerFunc {
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		defer cancel()
 
-		username := c.Param("username")
-		if username == "" {
+		user_id, ok := c.Get("user_id")
+		if !ok {
 			c.JSON(http.StatusBadRequest, "No username")
 			return
 		}
 
 		var user Schema.UserSchema
-		if err := collection.FindOne(ctx, bson.M{"username": username}).Decode(&user); err != nil {
+		if err := collection.FindOne(ctx, bson.M{"user_id": user_id}).Decode(&user); err != nil {
 			c.JSON(http.StatusInternalServerError, err.Error())
 			return
 		}

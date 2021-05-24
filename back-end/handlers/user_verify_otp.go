@@ -68,6 +68,18 @@ func (u *User) verifyOtp() gin.HandlerFunc {
 			return
 		}
 
+		tokenData := &Schema.TokenSchema{
+			Id:    primitive.NewObjectID(),
+			Phone: user.Phone,
+			Token: token,
+		}
+
+		_, err = tokenCollection.InsertOne(ctx, tokenData)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, err.Error())
+			return
+		}
+
 		_, err = conn.Do("DEL", otp.Otp)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err.Error())

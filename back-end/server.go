@@ -11,14 +11,14 @@ import (
 	RouteHandlers "github.com/angshumanHalder/letter/back-end/handlers"
 )
 
-var db *mongo.Database
+var Db *mongo.Database
 var pool *redis.Pool
 
 func main() {
 	conf.ReadConfigVars()
 	// db setup
 	dataStore := CreateMongoDataStore()
-	db = dataStore.db
+	Db = dataStore.db
 
 	pool = CreateRedisStore()
 	// declare a router
@@ -29,6 +29,6 @@ func main() {
 func newRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(cors.Default())
-	RouteHandlers.UserHandlers(r, db, pool)
+	RouteHandlers.UserHandlers(r, Db, pool)
 	return r
 }

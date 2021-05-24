@@ -39,7 +39,7 @@ func (u *User) registerHandler() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, err.Error())
 			return
 		}
-		// TODO: Refactor into a separate function
+
 		otp := utils.GenerateOTP()
 
 		conn := u.Pool.Get()
