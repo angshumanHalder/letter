@@ -27,7 +27,7 @@ export const verifyOtpApi = async (
   }
 };
 
-export const requestForOtp = async(reqPayload: RequestOtpRequest): Promise<ResponseData> => {
+export const requestOtpApi = async(reqPayload: RequestOtpRequest): Promise<ResponseData> => {
   try {
     const url = REQUEST_OTP();
     const res = await axios.post(url, reqPayload);

@@ -30,6 +30,9 @@ export default StyleSheet.create({
   },
   loginText: {
     fontSize: 16,
-    marginTop: 10,
+    marginTop: 15,
   },
+  linkText: {
+    color: theme.colors.blue,
+  }
 });

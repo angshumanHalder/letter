@@ -1,4 +1,4 @@
-import { registerUserApi, verifyOtpApi } from "../apis/authenticate";
+import { registerUserApi, requestOtpApi, verifyOtpApi } from "../apis/authenticate";
 import { AppDispatch } from "../configureStore";
 import { TOKEN } from "../utils/constants";
 import { save } from "../utils/secureStorage";
@@ -48,9 +48,15 @@ export const verifyOtp = (payload: OtpRequest) => {
   };
 };
 
-export const requestOtp = (payload: RequestOtpRequest) {
+export const requestOtp = (payload: RequestOtpRequest) => {
  return async function(dispatch: AppDispatch)  {
-   try {          
+   try {
+     const res = await requestOtpApi(payload);
+     if(res.Success) {
+       dispatch({
+         type: OTP_REQUEST_SUCCESS
+       });
+     }
    } catch(err) {
      dispatch({
        type: OTP_REQUEST_FAILED,

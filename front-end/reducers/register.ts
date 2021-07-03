@@ -4,6 +4,8 @@ import {
   OTP_VERIFICATION_SUCCESS,
   REGISTER_USER,
   REGISTER_USER_FAILED,
+  OTP_REQUEST_FAILED,
+  OTP_REQUEST_SUCCESS,
 } from "../actions/register";
 
 type RegisterState = {
@@ -11,6 +13,8 @@ type RegisterState = {
   registerError: null | string;
   verificationSuccess: boolean;
   verificationFailed: null | string;
+  otpRequestSuccess: boolean;
+  otpRequestFailed: null | string;
 };
 
 export const initialState: RegisterState = {
@@ -18,6 +22,8 @@ export const initialState: RegisterState = {
   registerError: null,
   verificationSuccess: false,
   verificationFailed: null,
+  otpRequestFailed: null,
+  otpRequestSuccess: false,
 };
 
 export const registerReducer = (state = initialState, action: AnyAction) => {
@@ -33,6 +39,18 @@ export const registerReducer = (state = initialState, action: AnyAction) => {
         ...state,
         verificationSuccess: false,
         verificationFailed: action.paylod,
+      };
+    case OTP_REQUEST_FAILED:
+      return {
+        ...state,
+        otpRequestSuccess: false,
+        otpRequestFailed: action.payload,
+      };
+    case OTP_REQUEST_SUCCESS:
+      return {
+        ...state,
+        otpRequestFailed: null,
+        otpRequestSuccess: true,
       };
     default:
       return state;

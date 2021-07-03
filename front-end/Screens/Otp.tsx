@@ -14,12 +14,17 @@ interface OtpProps {
 type OtpState = string;
 
 export const Otp: React.FC<OtpProps> = ({ navigation }) => {
-  const verificationSuccess = useAppSelector(
-    (state) => state.register.verificationSuccess
-  );
-  const verificationFailed = useAppSelector(
-    (state) => state.register.verificationFailed
-  );
+  const {
+    verificationSuccess,
+    verificationFailed,
+    otpRequestSuccess,
+    otpRequestFailed,
+  } = useAppSelector((state) => ({
+    verificationSuccess: state.register.verificationSuccess,
+    verificationFailed: state.register.verificationFailed,
+    otpRequestSuccess: state.register.otpRequestSuccess,
+    otpRequestFailed: state.register.otpRequestFailed,
+  }));
   const dispatch = useAppDispatch();
 
   const [otp, setOtp] = useState<OtpState>("");
@@ -29,17 +34,17 @@ export const Otp: React.FC<OtpProps> = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (verificationSuccess) {
+    if (verificationSuccess || otpRequestSuccess) {
       navigation.replace("ChatAndUserFeed");
     }
-  }, [verificationSuccess]);
+  }, [verificationSuccess, otpRequestSuccess]);
 
   useEffect(() => {
-    if (verificationFailed) {
+    if (verificationFailed || otpRequestFailed) {
       console.log(verificationFailed);
       showToast(verificationFailed);
     }
-  }, [verificationFailed]);
+  }, [verificationFailed, otpRequestFailed]);
 
   return (
     <SafeAreaView style={OtpStyles.otpContainer}>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Animated, SafeAreaView, View } from "react-native";
 import RegisterStyles from "../styles/Register";
 import { TextInput, Button, Text } from "react-native-paper";
-import { registerUser } from "../actions/register";
+import { registerUser, requestOtp, verifyOtp } from "../actions/register";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
 import { showToast } from "../utils/toast";
 import { RegisterNavigationProp } from "../types/navigationtypes";
@@ -31,6 +31,7 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
     username: "",
     phone: "",
   });
+  const [isRegister, setIsRegister] = useState(true);
 
   const onChangeHandler = (key: InputKeys, value: string) => {
     setInputs({
@@ -39,8 +40,16 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
     });
   };
 
-  const onRegisterHandler = () => {
-    dispatch(registerUser(inputs));
+  const onRegisterOrLoginHandler = () => {
+    if (isRegister) {
+      dispatch(registerUser(inputs));
+    } else {
+      dispatch(
+        requestOtp({
+          phone: inputs.phone,
+        })
+      );
+    }
   };
 
   useEffect(() => {
@@ -69,13 +78,15 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
         <Text style={RegisterStyles.logo}>LETTER</Text>
       </Animated.View>
       <View style={RegisterStyles.subContainer}>
-        <TextInput
-          label="username"
-          onChangeText={(val) => onChangeHandler(InputKeys.Username, val)}
-          value={inputs.username}
-          style={RegisterStyles.input}
-          mode="flat"
-        />
+        {isRegister && (
+          <TextInput
+            label="username"
+            onChangeText={(val) => onChangeHandler(InputKeys.Username, val)}
+            value={inputs.username}
+            style={RegisterStyles.input}
+            mode="flat"
+          />
+        )}
         <TextInput
           label="phone"
           onChangeText={(val) => onChangeHandler(InputKeys.Phone, val)}
@@ -86,13 +97,21 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
         />
         <Button
           style={RegisterStyles.button}
-          onPress={onRegisterHandler}
+          onPress={onRegisterOrLoginHandler}
           mode="contained"
         >
-          Register
+          {isRegister ? "Register" : "Login"}
         </Button>
-        <Text style={RegisterStyles.loginText} onPress={}>
-          or login
+        <Text
+          style={RegisterStyles.loginText}
+          onPress={() => {
+            setIsRegister(!isRegister);
+          }}
+        >
+          or{" "}
+          <Text style={RegisterStyles.linkText}>
+            {isRegister ? "login" : "register"}
+          </Text>
         </Text>
       </View>
     </SafeAreaView>
