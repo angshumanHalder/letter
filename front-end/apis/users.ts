@@ -1,16 +1,20 @@
-import { Contact } from "expo-contacts";
-import { flatten } from "../utils/flattenArray";
+import { GET_USERS } from "./Urls";
+import axios from "axios";
+import { getValueFor } from "../utils/secureStorage";
+import { TOKEN } from "../utils/constants";
 
-export const getUsers = async (contacts: Contact[]) => {
+export const getUsersApi = async (
+  contacts: ContactsRequest
+): Promise<ResponseData> => {
   try {
-    const phnNums = contacts.map((contact) => contact.phoneNumbers);
-    const flattenedPhnNums = [...flatten(phnNums, 1)];
-    const numbers = flattenedPhnNums.map((phnNum) => {
-      return phnNum.number;
+    const token = await getValueFor(TOKEN);
+    const res = await axios.post(GET_USERS(), contacts, {
+      headers: {
+        Authorization: `bearer ${token}`,
+      },
     });
-    //const reqBody = {
-    //numbers: flattendNumbers,
-    //};
-    //const res = await axios.post(GET_USERS(), reqBody);
-  } catch (err) {}
+    return res.data;
+  } catch (err) {
+    return err;
+  }
 };

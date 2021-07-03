@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"net/http"
 
 	utils "github.com/angshumanHalder/letter/back-end/utils"
@@ -15,6 +16,7 @@ func AuthMiddleware() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		fmt.Println("eoajsdfkasjdf", claims)
 		c.Set("user_id", claims["user_id"].(string))
 		c.Next()
 	}

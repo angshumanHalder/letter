@@ -1,10 +1,9 @@
 import React from "react";
 import { TouchableHighlight, View, Text } from "react-native";
 import ItemStyles from "../styles/Item";
-import * as Contacts from "expo-contacts";
 
 interface ItemProps {
-  item: Contacts.Contact;
+  item: ContactObj;
 }
 
 export const CustomItem: React.FC<ItemProps> = ({ item }) => {
@@ -16,7 +15,7 @@ export const CustomItem: React.FC<ItemProps> = ({ item }) => {
       }}
     >
       <View style={ItemStyles.item}>
-        <Text>{item.name}</Text>
+        <Text>{item.username}</Text>
       </View>
     </TouchableHighlight>
   );

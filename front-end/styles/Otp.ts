@@ -2,16 +2,9 @@ import { StyleSheet } from "react-native";
 import { theme } from "../CustomProperties/Theme";
 
 export default StyleSheet.create({
-  registerContainer: {
+  otpContainer: {
     display: "flex",
     alignItems: "center",
-    flexDirection: "column",
-  },
-  subContainer: {
-    width: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     flexDirection: "column",
   },
   input: {
@@ -26,10 +19,6 @@ export default StyleSheet.create({
     marginBottom: 100,
   },
   button: {
-    marginTop: 10,
-  },
-  loginText: {
-    fontSize: 16,
     marginTop: 10,
   },
 });

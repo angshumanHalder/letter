@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	Schema "github.com/angshumanHalder/letter/back-end/schemas"
@@ -14,6 +15,13 @@ import (
 
 func (u *User) getContacts() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		user_id, ok := c.Get("user_id")
+		if !ok {
+			log.Fatal("error")
+		}
+
+		fmt.Println(user_id)
+
 		var phones GetUsers
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		defer cancel()
@@ -49,10 +57,14 @@ func (u *User) getContacts() gin.HandlerFunc {
 			return
 		}
 
-		var contacts []string
+		var contacts []UserContact
 		for i := range users {
-			fmt.Println(users[i])
-			contacts = append(contacts, users[i].Phone)
+			user := UserContact{
+				Id:       users[i].Id.Hex(),
+				Username: users[i].Username,
+				Phone:    users[i].Phone,
+			}
+			contacts = append(contacts, user)
 		}
 
 		fmt.Println(contacts)

@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { Animated, SafeAreaView, View } from "react-native";
 import RegisterStyles from "../styles/Register";
 import { TextInput, Button, Text } from "react-native-paper";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { StackParamsList } from "../App";
 import { registerUser } from "../actions/register";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
+import { showToast } from "../utils/toast";
+import { RegisterNavigationProp } from "../types/navigationtypes";
 
 type RegisterState = {
   username: string;
@@ -16,8 +16,6 @@ enum InputKeys {
   Username = "username",
   Phone = "phone",
 }
-
-type RegisterNavigationProp = StackNavigationProp<StackParamsList, "Register">;
 
 interface RegisterProps {
   navigation: RegisterNavigationProp;
@@ -45,14 +43,17 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
     dispatch(registerUser(inputs));
   };
 
-  if (registerSuccess) {
-    console.log("registerSuccess", registerSuccess);
-  }
+  useEffect(() => {
+    if (registerSuccess) {
+      navigation.replace("OTP");
+    }
+  }, [registerSuccess]);
 
-  if (registerError) {
-    // TODO: show error message
-    console.log("failed");
-  }
+  useEffect(() => {
+    if (registerError) {
+      showToast(registerError);
+    }
+  }, [registerError]);
 
   useEffect(() => {
     Animated.timing(anim, {
@@ -81,6 +82,7 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
           value={inputs.phone}
           style={RegisterStyles.input}
           mode="flat"
+          keyboardType="numeric"
         />
         <Button
           style={RegisterStyles.button}
@@ -89,6 +91,9 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
         >
           Register
         </Button>
+        <Text style={RegisterStyles.loginText} onPress={}>
+          or login
+        </Text>
       </View>
     </SafeAreaView>
   );

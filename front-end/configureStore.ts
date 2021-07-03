@@ -1,10 +1,12 @@
 import { registerReducer } from "./reducers/register";
+import { contactsReducer } from "./reducers/contacts";
 import thunk from "redux-thunk";
 import { configureStore } from "@reduxjs/toolkit";
 
 export const store = configureStore({
   reducer: {
     register: registerReducer,
+    contacts: contactsReducer,
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(thunk),
 });

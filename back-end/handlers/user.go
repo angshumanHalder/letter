@@ -30,6 +30,12 @@ type GetUsers struct {
 	Phones []string `validate:"required"`
 }
 
+type UserContact struct {
+	Id       string
+	Username string
+	Phone    string
+}
+
 var collection *mongo.Collection
 var tokenCollection *mongo.Collection
 var response utils.Response
