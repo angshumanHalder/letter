@@ -44,7 +44,6 @@ func (u *User) getContacts() gin.HandlerFunc {
 		query := bson.M{"phone": bson.M{"$in": phones.Phones}, "verified": true}
 
 		cur, err := collection.Find(ctx, query)
-		defer cur.Close(ctx)
 
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, err.Error())
@@ -76,5 +75,7 @@ func (u *User) getContacts() gin.HandlerFunc {
 		}
 
 		c.JSON(http.StatusOK, response)
+
+		defer cur.Close(ctx)
 	}
 }
