@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	Schema "github.com/angshumanHalder/letter/back-end/schemas"
@@ -38,6 +39,7 @@ func (u *User) generateOtp() gin.HandlerFunc {
 		}
 
 		otp := utils.GenerateOTP()
+		fmt.Print(otp)
 
 		conn := u.Pool.Get()
 		defer conn.Close()
