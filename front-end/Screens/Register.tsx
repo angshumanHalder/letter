@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Animated, SafeAreaView, View } from "react-native";
 import RegisterStyles from "../styles/Register";
 import { TextInput, Button, Text } from "react-native-paper";
-import { registerUser, requestOtp, verifyOtp } from "../actions/register";
+import { registerUser, requestOtp } from "../actions/register";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
 import { showToast } from "../utils/toast";
 import { RegisterNavigationProp } from "../types/navigationtypes";
@@ -22,8 +22,17 @@ interface RegisterProps {
 }
 
 export const Register: React.FC<RegisterProps> = ({ navigation }) => {
-  const registerSuccess = useAppSelector((state) => state.register.success);
-  const registerError = useAppSelector((state) => state.register.registerError);
+  const {
+    registerSuccess,
+    registerError,
+    requestOtpSuccess,
+    requestOtpFailed,
+  } = useAppSelector((state) => ({
+    registerSuccess: state.register.success,
+    registerError: state.register.registerError,
+    requestOtpSuccess: state.register.otpRequestSuccess,
+    requestOtpFailed: state.register.otpRequestFailed,
+  }));
   const dispatch = useAppDispatch();
 
   const anim = useRef(new Animated.Value(0)).current;
@@ -53,16 +62,19 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (registerSuccess) {
+    if (registerSuccess || requestOtpSuccess) {
+      console.log("request otp success");
       navigation.replace("OTP");
     }
-  }, [registerSuccess]);
+  }, [registerSuccess, requestOtpSuccess]);
 
   useEffect(() => {
     if (registerError) {
       showToast(registerError);
+    } else if (requestOtpFailed) {
+      showToast(requestOtpFailed);
     }
-  }, [registerError]);
+  }, [registerError, requestOtpFailed]);
 
   useEffect(() => {
     Animated.timing(anim, {

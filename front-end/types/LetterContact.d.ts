@@ -1,5 +1,6 @@
 type ContactObj = {
-  id: string;
-  username: string;
-  phone: string;
+  Id: string;
+  Username: string;
+  Phone: string;
+  name: string;
 };

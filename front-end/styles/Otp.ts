@@ -6,6 +6,15 @@ export default StyleSheet.create({
     display: "flex",
     alignItems: "center",
     flexDirection: "column",
+    flex: 1,
+  },
+  subContainer: {
+    flex: 1,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
   },
   input: {
     width: "70%",

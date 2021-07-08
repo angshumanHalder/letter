@@ -1,4 +1,3 @@
-import { Contact } from "expo-contacts";
 import React, { useEffect, useState } from "react";
 import { FlatList, SafeAreaView } from "react-native";
 import { getContacts } from "../actions/users";
@@ -7,7 +6,6 @@ import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
 import { useGetContacts } from "../hooks/useGetContacts";
 import UserStyles from "../styles/Users";
 import { STORAGE_USER_KEY } from "../utils/constants";
-import { flatten } from "../utils/flattenArray";
 import { getValueFor, save } from "../utils/secureStorage";
 import { showToast } from "../utils/toast";
 
@@ -26,26 +24,25 @@ export const Users: React.FC<UserProps> = () => {
 
   useEffect(() => {
     if (phoneContacts) {
-      const phnNums = phoneContacts.map(
-        (contact: Contact) => contact.phoneNumbers
-      );
-      const flattenedPhnNums = [...flatten(phnNums, 1)];
-      const phones = flattenedPhnNums.filter((phnNum) => {
-        if (phnNum?.number) {
-          return String(phnNum.number);
-        }
-      });
-      if (phones && phones.length > 0) {
-        dispatch(getContacts({ phones }));
-      }
+      const phoneNumbers = Object.keys(phoneContacts);
+      dispatch(getContacts({ phones: phoneNumbers }));
     }
   }, [phoneContacts]);
 
   useEffect(() => {
-    if (contacts) {
+    console.log(contacts);
+    if (contacts && phoneContacts) {
+      const matchedContacts = [];
+      for (let contact of contacts) {
+        matchedContacts.push({
+          name: phoneContacts[contact.Phone],
+          ...contact,
+        });
+      }
+      console.log(matchedContacts);
       (async function () {
         await save(STORAGE_USER_KEY, JSON.stringify(contacts));
-        setContacts(contacts);
+        setContacts(matchedContacts as ContactState);
       })();
     }
   }, [contacts]);
@@ -68,8 +65,8 @@ export const Users: React.FC<UserProps> = () => {
       {contactState && (
         <FlatList
           data={contactState}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <CustomItem item={item} />}
+          keyExtractor={(item) => item.Id}
+          renderItem={({ item }) => <CustomItem key={item.Id} item={item} />}
         />
       )}
     </SafeAreaView>

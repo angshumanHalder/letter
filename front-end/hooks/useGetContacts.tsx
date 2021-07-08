@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import * as Contacts from "expo-contacts";
+import { contactMappingObject } from "../utils/createContactObjectMapping";
 
-type ContactState = Contacts.Contact[] | null;
+type ContactState = Record<string, string> | null;
 
 export const useGetContacts = (): ContactState => {
   const [contacts, setContacts] = useState<ContactState>(null);
@@ -18,7 +19,8 @@ export const useGetContacts = (): ContactState => {
           ],
         });
         if (data.length > 0) {
-          setContacts(data);
+          const mappedContacts = contactMappingObject(data);
+          setContacts(mappedContacts);
         }
       }
     })();

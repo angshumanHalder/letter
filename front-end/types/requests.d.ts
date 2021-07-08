@@ -13,4 +13,4 @@ type ContactsRequest = {
 
 type RequestOtpRequest = {
   phone: string;
-}
+};

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 
 	Schema "github.com/angshumanHalder/letter/back-end/schemas"
@@ -13,6 +12,11 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+type TokenResponse struct {
+	Token  string
+	UserId string
+}
 
 func (u *User) verifyOtp() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -60,8 +64,6 @@ func (u *User) verifyOtp() gin.HandlerFunc {
 
 		uId := user.Id.Hex()
 
-		fmt.Println(uId, user)
-
 		token, err := utils.IssueJWTToken(uId)
 		if err != nil {
 			c.JSON(http.StatusUnprocessableEntity, err.Error())
@@ -86,9 +88,15 @@ func (u *User) verifyOtp() gin.HandlerFunc {
 			return
 		}
 
+		data := TokenResponse{
+			Token:  token,
+			UserId: uId,
+		}
+
 		response := utils.Response{
+			Message: "",
 			Success: true,
-			Data:    token,
+			Data:    data,
 		}
 		c.JSON(http.StatusOK, response)
 

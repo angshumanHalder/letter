@@ -1,4 +1,5 @@
-export const BASE_URL = "http://192.168.0.107:4000";
+export const BASE_URL = "http://192.168.0.103:4000";
+export const SOCkET_URL = "ws://192.168.0.103:4000/user/ws";
 //export const BASE_URL = "http://localhost:4000";
 
 export const GET_USER = (params: any) => BASE_URL + `/user/${params.username}`;

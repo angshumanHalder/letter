@@ -2,12 +2,17 @@ import { StyleSheet } from "react-native";
 import { theme } from "../CustomProperties/Theme";
 
 export default StyleSheet.create({
+  container: {
+    // View
+    flex: 1,
+    paddingLeft: 20,
+    paddingRight: 20,
+    alignItems: "center",
+    backgroundColor: theme.colors.white,
+  },
   card: {
     // Touchable capacity
-    margin: 1,
-    paddingLeft: 20,
     width: "100%",
-    backgroundColor: theme.colors.white,
   },
   userInfo: {
     // view
@@ -26,7 +31,7 @@ export default StyleSheet.create({
     padding: 15,
     paddingLeft: 0,
     marginLeft: 10,
-    width: "100%",
+    width: 300,
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.grey,
   },
@@ -38,7 +43,12 @@ export default StyleSheet.create({
   },
   userName: {
     // text
-    fontSize: 20,
+    fontSize: 12,
+    color: theme.colors.greyDark,
+  },
+  postTime: {
+    // text
+    fontSize: 12,
     color: theme.colors.greyDark,
   },
   messageText: {

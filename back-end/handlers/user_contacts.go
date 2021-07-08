@@ -2,26 +2,16 @@ package handlers
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	Schema "github.com/angshumanHalder/letter/back-end/schemas"
 	utils "github.com/angshumanHalder/letter/back-end/utils"
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
-
-	"fmt"
 )
 
 func (u *User) getContacts() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		user_id, ok := c.Get("user_id")
-		if !ok {
-			log.Fatal("error")
-		}
-
-		fmt.Println(user_id)
-
 		var phones GetUsers
 		ctx, cancel := context.WithTimeout(context.Background(), timeout)
 		defer cancel()
@@ -36,8 +26,6 @@ func (u *User) getContacts() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, err.Error())
 			return
 		}
-
-		fmt.Println(phones.Phones)
 
 		var users []Schema.UserSchema
 
@@ -65,8 +53,6 @@ func (u *User) getContacts() gin.HandlerFunc {
 			}
 			contacts = append(contacts, user)
 		}
-
-		fmt.Println(contacts)
 
 		response := utils.Response{
 			Success: true,
