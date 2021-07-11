@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, SafeAreaView } from "react-native";
+import { setActiveChatUserId } from "../actions/chat";
 import { getContacts } from "../actions/users";
 import { CustomItem } from "../Components/Item";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
@@ -60,13 +61,23 @@ export const Users: React.FC<UserProps> = () => {
     }
   }, [fetchContactsFailed]);
 
+  const setActiveUser = (id: string) => {
+    dispatch(setActiveChatUserId(id));
+  };
+
   return (
     <SafeAreaView style={UserStyles.container}>
       {contactState && (
         <FlatList
           data={contactState}
           keyExtractor={(item) => item.Id}
-          renderItem={({ item }) => <CustomItem key={item.Id} item={item} />}
+          renderItem={({ item }) => (
+            <CustomItem
+              key={item.Id}
+              item={item}
+              onClick={() => setActiveUser(item.Id)}
+            />
+          )}
         />
       )}
     </SafeAreaView>

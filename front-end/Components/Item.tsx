@@ -6,21 +6,23 @@ import { Avatar, Text } from "react-native-paper";
 
 interface ItemProps {
   item: ContactObj;
+  onClick: () => void;
 }
 
-export const CustomItem: React.FC<ItemProps> = ({ item }) => {
+export const CustomItem: React.FC<ItemProps> = ({ item, onClick }) => {
   const navigation = useNavigation();
   return (
     <TouchableHighlight
       activeOpacity={0.8}
-      onPress={() =>
+      onPress={() => {
+        onClick();
         navigation.navigate({
           name: "Chat",
           params: {
             userId: item.Id,
           },
-        })
-      }
+        });
+      }}
       style={ItemStyles.card}
       underlayColor="#E3E3E1"
     >

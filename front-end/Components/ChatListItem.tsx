@@ -5,7 +5,8 @@ import { Avatar, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 interface ChatListItemProps {
-  item: Message;
+  item: ChatUser;
+  onClick: () => void;
 }
 
 export const ChatListItem: React.FC<ChatListItemProps> = ({ item }) => {

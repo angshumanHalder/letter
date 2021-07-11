@@ -1,13 +1,33 @@
 type SocketMessage = {
   eventName: string;
   eventPayload: {
-    userId: string;
-    message: any;
+    to: string;
+    message: MessageContent;
   };
 };
 
-type Message = {
+type MessageContent = {
+  _id: string;
+  createdAt: Date;
+  text: string;
+  user: {
+    _id: string;
+  };
+};
+
+type ChatUser = {
   id: string;
   userName: string;
   messageText: string;
+};
+
+type Chat = {
+  [key: string]: {
+    userId: string;
+    messages: any[];
+  };
+};
+
+type ActiveChatMessages = {
+  messages: any[];
 };

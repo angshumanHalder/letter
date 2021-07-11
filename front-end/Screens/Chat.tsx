@@ -3,46 +3,58 @@ import { View } from "react-native";
 import { Bubble, GiftedChat, Send } from "react-native-gifted-chat";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useSelector } from "react-redux";
+import { sendMessage } from "../actions/chat";
 import { theme } from "../CustomProperties/Theme";
+import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
 import { ChatScreenRouteProp } from "../types/navigationtypes";
 import { CHATS, ME } from "../utils/constants";
 import { getValueFor, save } from "../utils/secureStorage";
 
-interface ChatProps {
-  route: ChatScreenRouteProp;
-}
+interface ChatProps {}
 
-export const Chat: React.FC<ChatProps> = ({ route }) => {
-  const [messages, setMessages] = useState([]);
-  const [myId, setMyId] = useState("");
+export const Chat: React.FC<ChatProps> = () => {
+  const activeChat: ActiveChatMessages | null = useAppSelector(
+    (state) => state.chat.activeChat
+  );
+  const activeChatUserId: string | null = useAppSelector(
+    (state) => state.chat.activeChatUserId
+  );
+  const dispatch = useAppDispatch();
+
+  const [messages, setMessages] = useState<any[]>([]);
+  const [myId, setMyId] = useState<string>("");
 
   useEffect(() => {
-    (async function () {
+    if (activeChat && activeChat.messages) {
+      setMessages(activeChat.messages);
+    }
+  }, [activeChat]);
+
+  useEffect(() => {
+    (async () => {
       const storedMyId = await getValueFor(ME);
       setMyId(storedMyId as string);
-      const storedMessages = await getValueFor(
-        `${CHATS}${route.params.userId}${storedMyId}`
-      );
-      if (storedMessages) {
-        const parsedMessages = JSON.parse(storedMessages);
-        setMessages(parsedMessages);
-      }
     })();
   }, []);
 
-  useEffect(() => {
-    return () => {
-      (async () => {
-        await save(
-          `${CHATS}${route.params.userId}${myId}`,
-          JSON.stringify(messages)
-        );
-      })();
-    };
-  });
+  // useEffect(() => {
+  //   return () => {
+  //     (async () => {
+  //       await save(
+  //         `${CHATS}${route.params.userId}${myId}`,
+  //         JSON.stringify(messages)
+  //       );
+  //     })();
+  //   };
+  // });
 
   const onSend = useCallback((messages = []) => {
-    setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
+    GiftedChat.append;
+    if (activeChatUserId && messages.length) {
+      messages[0].createdAt = messages[0].createdAt.toString();
+      dispatch(sendMessage(activeChatUserId, messages));
+    }
   }, []);
 
   const renderBubble = (props: any) => {
@@ -106,6 +118,7 @@ export const Chat: React.FC<ChatProps> = ({ route }) => {
       renderBubble={renderBubble}
       scrollToBottom
       scrollToBottomComponent={scrollToBottomComponent}
+      wrapInSafeArea
     />
   );
 };
