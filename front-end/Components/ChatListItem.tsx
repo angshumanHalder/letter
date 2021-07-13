@@ -5,16 +5,23 @@ import { Avatar, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 
 interface ChatListItemProps {
-  item: ChatUser;
+  item: ChatItem;
   onClick: () => void;
 }
 
-export const ChatListItem: React.FC<ChatListItemProps> = ({ item }) => {
+export const ChatListItem: React.FC<ChatListItemProps> = ({
+  item,
+  onClick,
+}) => {
   const navigation = useNavigation();
+  console.log("Chat list item", item);
   return (
     <TouchableHighlight
       activeOpacity={0.8}
-      onPress={() => navigation.navigate("Chat")}
+      onPress={() => {
+        onClick();
+        navigation.navigate("Chat");
+      }}
       style={ChatStyles.card}
       underlayColor="#E3E3E1"
     >

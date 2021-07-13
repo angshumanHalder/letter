@@ -52,10 +52,10 @@ func EmitToSpecificClient(hub *Hub, payload SocketEventStruct, userId string) {
 
 func handleSocketPayloadEvents(client *Client, socketEventPayload SocketEventStruct) {
 	var socketEventReponse SocketEventStruct
-	selectedUserId := socketEventPayload.EventPayload.(map[string]interface{})["userId"].(string)
+	selectedUserId := socketEventPayload.EventPayload.(map[string]interface{})["to"].(string)
 	socketEventReponse.EventName = "message response"
 	socketEventReponse.EventPayload = map[string]interface{}{
-		"userId":  selectedUserId,
+		"to":      selectedUserId,
 		"message": socketEventPayload.EventPayload.(map[string]interface{})["message"],
 	}
 	EmitToSpecificClient(client.hub, socketEventReponse, selectedUserId)

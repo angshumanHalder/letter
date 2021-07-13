@@ -15,17 +15,14 @@ type MessageContent = {
   };
 };
 
-type ChatUser = {
+type ChatItem = {
   id: string;
   userName: string;
-  messageText: string;
+  messageText: MessageContent;
 };
 
 type Chat = {
-  [key: string]: {
-    userId: string;
-    messages: any[];
-  };
+  [key: string]: ActiveChatMessages | null;
 };
 
 type ActiveChatMessages = {

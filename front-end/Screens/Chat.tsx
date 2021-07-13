@@ -1,15 +1,14 @@
-import React, { useCallback, useState, useEffect } from "react";
+import cloneDeep from "clone-deep";
+import React, { useCallback, useEffect, useState } from "react";
 import { View } from "react-native";
 import { Bubble, GiftedChat, Send } from "react-native-gifted-chat";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useSelector } from "react-redux";
-import { sendMessage } from "../actions/chat";
+import { chatCleanUpOnUnMount, sendMessage } from "../actions/chat";
 import { theme } from "../CustomProperties/Theme";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
-import { ChatScreenRouteProp } from "../types/navigationtypes";
-import { CHATS, ME } from "../utils/constants";
-import { getValueFor, save } from "../utils/secureStorage";
+import { ME } from "../utils/constants";
+import { getValueFor } from "../utils/secureStorage";
 
 interface ChatProps {}
 
@@ -27,7 +26,7 @@ export const Chat: React.FC<ChatProps> = () => {
 
   useEffect(() => {
     if (activeChat && activeChat.messages) {
-      setMessages(activeChat.messages);
+      setMessages(cloneDeep(activeChat.messages));
     }
   }, [activeChat]);
 
@@ -38,17 +37,6 @@ export const Chat: React.FC<ChatProps> = () => {
     })();
   }, []);
 
-  // useEffect(() => {
-  //   return () => {
-  //     (async () => {
-  //       await save(
-  //         `${CHATS}${route.params.userId}${myId}`,
-  //         JSON.stringify(messages)
-  //       );
-  //     })();
-  //   };
-  // });
-
   const onSend = useCallback((messages = []) => {
     GiftedChat.append;
     if (activeChatUserId && messages.length) {
@@ -57,13 +45,19 @@ export const Chat: React.FC<ChatProps> = () => {
     }
   }, []);
 
+  useEffect(() => {
+    return () => {
+      dispatch(chatCleanUpOnUnMount());
+    };
+  }, []);
+
   const renderBubble = (props: any) => {
     return (
       <Bubble
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: theme.colors.blue,
+            backgroundColor: theme.colors.primary,
           },
           left: {
             backgroundColor: theme.colors.greyDark,
@@ -99,7 +93,7 @@ export const Chat: React.FC<ChatProps> = () => {
             name="send-circle"
             style={{ marginBottom: 5, marginRight: 5 }}
             size={32}
-            color={theme.colors.blue}
+            color={theme.colors.primary}
           />
         </View>
       </Send>
@@ -119,6 +113,11 @@ export const Chat: React.FC<ChatProps> = () => {
       scrollToBottom
       scrollToBottomComponent={scrollToBottomComponent}
       wrapInSafeArea
+      renderAvatar={() => null}
+      timeTextStyle={{
+        left: { color: theme.colors.white },
+        right: { color: theme.colors.white },
+      }}
     />
   );
 };

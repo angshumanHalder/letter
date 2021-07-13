@@ -5,7 +5,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Avatar, Text } from "react-native-paper";
 
 interface ItemProps {
-  item: ContactObj;
+  item: LocalContacts;
   onClick: () => void;
 }
 

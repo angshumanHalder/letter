@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FlatList, SafeAreaView } from "react-native";
 import { setActiveChatUserId } from "../actions/chat";
-import { getContacts } from "../actions/users";
+import { getContacts, saveLocalContactsToStore } from "../actions/users";
 import { CustomItem } from "../Components/Item";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
 import { useGetContacts } from "../hooks/useGetContacts";
@@ -12,7 +12,7 @@ import { showToast } from "../utils/toast";
 
 interface UserProps {}
 
-type ContactState = [ContactObj];
+type ContactState = LocalContacts[];
 
 export const Users: React.FC<UserProps> = () => {
   const contacts = useAppSelector((state) => state.contacts.contacts);
@@ -31,18 +31,17 @@ export const Users: React.FC<UserProps> = () => {
   }, [phoneContacts]);
 
   useEffect(() => {
-    console.log(contacts);
     if (contacts && phoneContacts) {
-      const matchedContacts = [];
+      const matchedContacts: LocalContacts[] = [];
       for (let contact of contacts) {
         matchedContacts.push({
           name: phoneContacts[contact.Phone],
           ...contact,
         });
       }
-      console.log(matchedContacts);
+      dispatch(saveLocalContactsToStore(matchedContacts));
       (async function () {
-        await save(STORAGE_USER_KEY, JSON.stringify(contacts));
+        await save(STORAGE_USER_KEY, JSON.stringify(matchedContacts));
         setContacts(matchedContacts as ContactState);
       })();
     }

@@ -1,9 +1,8 @@
-import { Action, ActionCreator, AnyAction } from "redux";
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 import { setupSocketConnection } from "../apis/chat";
 import { AppDispatch, RootState } from "../configureStore";
-import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
-import { CHATS, ME } from "../utils/constants";
+import { CHATS } from "../utils/constants";
 import { getValueFor } from "../utils/secureStorage";
 
 export const SET_ACTIVE_CHAT_USER_ID = "SET_ACTIVE_CHAT_USER_ID";
@@ -16,6 +15,7 @@ export const FETCH_ALL_CHATS_FROM_STORAGE_ERROR =
   "FETCHED_ALL_CHATS_FROM_STORAGE_ERROR";
 export const ADD_MESSAGE_TO_ACTIVE_CHAT = "ADD_MESSAGE_TO_ACTIVE_CHAT";
 export const ADD_MESSAGE_TO_OTHER_CHAT = "ADD_MESSAGE_TO_OTHER_CHAT";
+export const CHAT_CLEAN_UP_UPON_UNMOUNT = "CHAT_CLEAN_UP_UPON_UNMOUNT";
 
 let connection: WebSocket | null = null;
 
@@ -38,6 +38,7 @@ export const createSocketConnection = async (
           const message = socketPayload.eventPayload.message;
           const sentBy = message.user._id;
           const messageContent = message;
+          console.log("on message response", messageContent);
           dispatch(addMessage(sentBy, activeChatUserId, [messageContent]));
           break;
         default:
@@ -51,11 +52,10 @@ export const createSocketConnection = async (
 
 export const sendMessage = (
   activeChatUserId: string,
-  messageContent: [MessageContent]
+  messageContent: MessageContent[]
 ) => {
   return async function (dispatch: AppDispatch) {
     if (connection) {
-      // send message and add it to the active chat
       const message: SocketMessage = {
         eventName: "message",
         eventPayload: {
@@ -98,25 +98,23 @@ export const getChatsFromStorage = () => {
 
 export const setActiveChatUserId = (userId: string) => {
   return async function (dispatch: AppDispatch) {
-    const activeChatUserId = userId;
-    console.log("set active user id", userId);
     dispatch({
       type: SET_ACTIVE_CHAT_USER_ID,
-      payload: activeChatUserId,
+      payload: userId,
     });
   };
 };
 
 export const removeActiveChatUserId = () => {
-  return async function (dispatch: AppDispatch) {
+  return function (dispatch: AppDispatch) {
     dispatch({
       type: REMOVE_ACTIVE_CHAT_USER_ID,
     });
   };
 };
 
-export const setActiveChat = (activeChat: any[]) => {
-  return async function (dispatch: AppDispatch) {
+export const setActiveChat = (activeChat: ActiveChatMessages) => {
+  return function (dispatch: AppDispatch) {
     dispatch({
       type: SET_ACTIVE_CHAT,
       payload: activeChat,
@@ -125,7 +123,7 @@ export const setActiveChat = (activeChat: any[]) => {
 };
 
 export const removeActiveChat = () => {
-  return async function (dispatch: AppDispatch) {
+  return function (dispatch: AppDispatch) {
     dispatch({
       type: REMOVE_ACTIVE_CHAT,
     });
@@ -135,7 +133,7 @@ export const removeActiveChat = () => {
 export const addMessage = (
   chatUserId: string,
   activeChatUserId: string | null,
-  messageContent: [MessageContent]
+  messageContent: MessageContent[]
 ) => {
   return async function (
     dispatch: ThunkDispatch<RootState, {}, AnyAction>,
@@ -147,7 +145,8 @@ export const addMessage = (
       activeChatUserId === chatUserId,
       activeChatUserId,
       chatUserId,
-      chat.activeChatUserId
+      chat.activeChatUserId,
+      messageContent
     );
     if (
       activeChatUserId === chatUserId ||
@@ -160,8 +159,20 @@ export const addMessage = (
     } else {
       dispatch({
         type: ADD_MESSAGE_TO_OTHER_CHAT,
-        payload: messageContent,
+        payload: {
+          chatUserId,
+          messageContent,
+        },
       });
     }
+  };
+};
+
+export const chatCleanUpOnUnMount = () => {
+  return function (dispatch: AppDispatch) {
+    console.log("chat cleanup");
+    dispatch({
+      type: CHAT_CLEAN_UP_UPON_UNMOUNT,
+    });
   };
 };
