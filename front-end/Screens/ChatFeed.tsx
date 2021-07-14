@@ -38,7 +38,8 @@ export const ChatFeed: React.FC<ChatFeedProps> = () => {
         const message: ChatItem = {
           id: key,
           userName: idToNameMapping[key],
-          messageText: chats[key]?.messages[0].text,
+          messageText: chats[key]!.messages[0].text,
+          new: chats[key]!.new,
         };
         messages.push(message);
         console.log("chat feed chats", message);
@@ -61,15 +62,6 @@ export const ChatFeed: React.FC<ChatFeedProps> = () => {
     console.log("active chat chat feed", chats![id]);
     dispatch(setActiveChat(chats![id]!));
   };
-
-  // useEffect(() => {
-  //   if (activeChatUserId && chats) {
-  //     const chat = chats[activeChatUserId];
-  //     if (chat && chat.messages) {
-  //       dispatch(setActiveChat(chat));
-  //     }
-  //   }
-  // }, [activeChatUserId]);
 
   return (
     <SafeAreaView style={ChatStyles.container}>

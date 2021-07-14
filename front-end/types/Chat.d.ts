@@ -19,6 +19,7 @@ type ChatItem = {
   id: string;
   userName: string;
   messageText: MessageContent;
+  new: boolean;
 };
 
 type Chat = {
@@ -27,4 +28,5 @@ type Chat = {
 
 type ActiveChatMessages = {
   messages: any[];
+  new: boolean;
 };

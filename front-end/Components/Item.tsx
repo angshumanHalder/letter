@@ -28,7 +28,10 @@ export const CustomItem: React.FC<ItemProps> = ({ item, onClick }) => {
     >
       <View style={ItemStyles.userInfo}>
         <View style={ItemStyles.userImgWrapper}>
-          <Avatar.Text size={50} label={"XX"} />
+          <Avatar.Text
+            size={50}
+            label={item.name && item.name[0].toUpperCase()}
+          />
         </View>
         <View style={ItemStyles.textSection}>
           <View style={ItemStyles.userInfoText}>

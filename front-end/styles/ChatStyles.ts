@@ -5,8 +5,9 @@ export default StyleSheet.create({
   container: {
     // View
     flex: 1,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingTop: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
     alignItems: "center",
     backgroundColor: theme.colors.white,
   },

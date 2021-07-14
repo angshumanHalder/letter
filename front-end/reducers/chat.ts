@@ -51,7 +51,7 @@ export const chatReducer: Reducer<ChatState> = (
     case ADD_MESSAGE_TO_ACTIVE_CHAT:
       let chat: ActiveChatMessages | null = cloneDeep(state.activeChat);
       if (!chat) {
-        chat = { messages: [] };
+        chat = { messages: [], new: false };
       }
       chat.messages = action.payload.concat(chat.messages);
       return { ...state, activeChat: chat };
@@ -61,6 +61,7 @@ export const chatReducer: Reducer<ChatState> = (
         allChats = {
           [action.payload.chatUserId]: {
             messages: [],
+            new: true,
           },
         };
       } else if (allChats && !allChats[action.payload.chatUserId]) {
@@ -68,6 +69,7 @@ export const chatReducer: Reducer<ChatState> = (
           ...allChats,
           [action.payload.chatUserId]: {
             messages: [],
+            new: true,
           },
         };
       }
@@ -75,6 +77,7 @@ export const chatReducer: Reducer<ChatState> = (
         action.payload.messageContent.concat(
           allChats[action.payload.chatUserId]!.messages
         );
+      allChats[action.payload.chatUserId]!.new = true;
       return {
         ...state,
         chats: allChats,
@@ -84,7 +87,11 @@ export const chatReducer: Reducer<ChatState> = (
       if (!chats) {
         chats = {};
       }
-      chats[state.activeChatUserId as string] = state.activeChat;
+      const activeChat: ActiveChatMessages | null = cloneDeep(state.activeChat);
+      if (activeChat) {
+        activeChat.new = false;
+      }
+      chats[state.activeChatUserId as string] = activeChat;
       return {
         ...state,
         activeChatUserId: null,
