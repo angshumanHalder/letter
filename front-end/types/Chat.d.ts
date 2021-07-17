@@ -20,6 +20,7 @@ type ChatItem = {
   userName: string;
   messageText: MessageContent;
   new: boolean;
+  publicKey: string;
 };
 
 type Chat = {

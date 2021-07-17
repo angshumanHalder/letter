@@ -63,7 +63,6 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
 
   useEffect(() => {
     if (registerSuccess || requestOtpSuccess) {
-      console.log("request otp success");
       navigation.replace("OTP");
     }
   }, [registerSuccess, requestOtpSuccess]);

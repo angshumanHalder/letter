@@ -5,8 +5,8 @@ import { ChatFeed } from "./ChatFeed";
 import { Users } from "./Users";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
 import { getContacts, saveLocalContactsToStore } from "../actions/users";
-import { save } from "../utils/secureStorage";
-import { STORAGE_USER_KEY } from "../utils/constants";
+import { getValueFor, save } from "../utils/secureStorage";
+import { PRIVATE_KEY, PUBLIC_KEY, USERS } from "../utils/constants";
 
 export const ChatUserScreens = () => {
   const contacts = useAppSelector((state) => state.contacts.contacts);
@@ -27,7 +27,7 @@ export const ChatUserScreens = () => {
 
   useEffect(() => {
     if (contacts && phoneContacts) {
-      const matchedContacts: LocalContacts[] = [];
+      const matchedContacts: LocalContact[] = [];
       for (let contact of contacts) {
         matchedContacts.push({
           name: phoneContacts[contact.Phone],
@@ -36,7 +36,7 @@ export const ChatUserScreens = () => {
       }
       dispatch(saveLocalContactsToStore(matchedContacts));
       (async function () {
-        await save(STORAGE_USER_KEY, JSON.stringify(matchedContacts));
+        await save(USERS, JSON.stringify(matchedContacts));
       })();
     }
   }, [contacts]);

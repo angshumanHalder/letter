@@ -8,7 +8,8 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-native-community/masked-view": "0.1.11",
+    "@akeo/react-native-rsa-encryption": "^1.0.3",
+    "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",
     "@reduxjs/toolkit": "^1.6.0",
@@ -26,6 +27,7 @@
     "react-native-gifted-chat": "^0.16.3",
     "react-native-paper": "^4.9.2",
     "react-native-reanimated": "~2.2.0",
+    "react-native-rsa": "^0.0.3",
     "react-native-safe-area-context": "3.2.0",
     "react-native-screens": "~3.4.0",
     "react-native-vector-icons": "^8.1.0",

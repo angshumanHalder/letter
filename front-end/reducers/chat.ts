@@ -9,12 +9,15 @@ import {
   ADD_MESSAGE_TO_ACTIVE_CHAT,
   CHAT_CLEAN_UP_UPON_UNMOUNT,
   ADD_MESSAGE_TO_OTHER_CHAT,
+  SET_ACTIVE_CHAT_USER_ENCRYPTION_kEY,
+  REMOVE_ACTIVE_CHAT_USER_ENCRYPTION_kEY,
 } from "../actions/chat";
 import cloneDeep from "clone-deep";
 import { Reducer } from "redux";
 
 type ChatState = {
   activeChatUserId: string | null;
+  encryptionKey: string | null;
   activeChat: ActiveChatMessages | null;
   chats: Chat | null;
   chatsFetchError: string | null;
@@ -22,6 +25,7 @@ type ChatState = {
 
 export const initialState: ChatState = {
   activeChatUserId: null,
+  encryptionKey: null,
   activeChat: null,
   chats: null,
   chatsFetchError: null,
@@ -44,6 +48,10 @@ export const chatReducer: Reducer<ChatState> = (
       return { ...state, activeChatUserId: action.payload as string };
     case REMOVE_ACTIVE_CHAT_USER_ID:
       return { ...state, activeChatUserId: null };
+    case SET_ACTIVE_CHAT_USER_ENCRYPTION_kEY:
+      return { ...state, encryptionKey: action.payload as string };
+    case REMOVE_ACTIVE_CHAT_USER_ENCRYPTION_kEY:
+      return { ...state, encryptionKey: null };
     case SET_ACTIVE_CHAT:
       return { ...state, activeChat: cloneDeep(action.payload) };
     case REMOVE_ACTIVE_CHAT:
@@ -91,10 +99,11 @@ export const chatReducer: Reducer<ChatState> = (
       if (activeChat) {
         activeChat.new = false;
       }
-      chats[state.activeChatUserId as string] = activeChat;
+      chats[state.activeChatUserId! as string] = activeChat;
       return {
         ...state,
         activeChatUserId: null,
+        encryptionKey: null,
         activeChat: null,
         chats: chats,
       };

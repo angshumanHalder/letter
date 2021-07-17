@@ -7,18 +7,13 @@ import { theme } from "./CustomProperties/Theme";
 import { Provider } from "react-redux";
 import { store } from "./configureStore";
 import { Navigation } from "./Navigation";
+import { useEffect } from "react";
+import { generateKeys } from "./utils/pkGen";
 
 export default function App() {
-  //const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  //useEffect(() => {
-  //(async () => {
-  //const token = await getValueFor("token");
-  //if (token) {
-  //setIsLoggedIn(true);
-  //}
-  //})();
-  //}, [isLoggedIn]);
+  useEffect(() => {
+    generateKeys();
+  }, []);
 
   return (
     <Provider store={store}>

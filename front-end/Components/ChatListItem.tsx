@@ -15,7 +15,6 @@ export const ChatListItem: React.FC<ChatListItemProps> = ({
   onClick,
 }) => {
   const navigation = useNavigation();
-  console.log("Chat list item", item);
   return (
     <TouchableHighlight
       activeOpacity={0.8}

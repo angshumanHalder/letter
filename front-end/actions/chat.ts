@@ -1,12 +1,16 @@
-import { AnyAction } from "redux";
-import { ThunkDispatch } from "redux-thunk";
 import { setupSocketConnection } from "../apis/chat";
 import { AppDispatch, RootState } from "../configureStore";
-import { CHATS } from "../utils/constants";
+import { CHATS, PRIVATE_KEY, PUBLIC_KEY } from "../utils/constants";
 import { getValueFor } from "../utils/secureStorage";
+// @ts-ignore
+import RSAKey from "react-native-rsa";
 
 export const SET_ACTIVE_CHAT_USER_ID = "SET_ACTIVE_CHAT_USER_ID";
 export const REMOVE_ACTIVE_CHAT_USER_ID = "REMOVE_ACTIVE_CHAT_USER_ID";
+export const SET_ACTIVE_CHAT_USER_ENCRYPTION_kEY =
+  "SET_ACTIVE_CHAT_USER_ENCRYPTION_kEY";
+export const REMOVE_ACTIVE_CHAT_USER_ENCRYPTION_kEY =
+  "REMOVE_ACTIVE_CHAT_ENCRYPTION_kEY";
 export const SET_ACTIVE_CHAT = "SET_ACTIVE_CHAT";
 export const REMOVE_ACTIVE_CHAT = "REMOVE_ACTIVE_CHAT";
 export const FETCH_ALL_CHATS_FROM_STORAGE_SUCCESS =
@@ -19,15 +23,12 @@ export const CHAT_CLEAN_UP_UPON_UNMOUNT = "CHAT_CLEAN_UP_UPON_UNMOUNT";
 
 let connection: WebSocket | null = null;
 
-export const createSocketConnection = async (
-  dispatch: AppDispatch,
-  activeChatUserId: string | null
-) => {
+export const createSocketConnection = async (dispatch: AppDispatch) => {
   connection = await setupSocketConnection();
   connection.onopen = () => {
     console.log("connection set up success");
   };
-  connection.onmessage = (event: WebSocketMessageEvent) => {
+  connection.onmessage = async (event: WebSocketMessageEvent) => {
     try {
       const socketPayload: SocketMessage = JSON.parse(event.data);
       switch (socketPayload.eventName) {
@@ -35,11 +36,16 @@ export const createSocketConnection = async (
           if (!socketPayload.eventPayload) {
             return;
           }
-          const message = socketPayload.eventPayload.message;
+          const rsa = new RSAKey();
+          const privateKey = await getValueFor(PRIVATE_KEY);
+          rsa.setPrivateString(privateKey);
+          const message: MessageContent = socketPayload.eventPayload.message;
+          const decryptedMessage = rsa.decrypt(message.text);
+          console.log(decryptedMessage);
           const sentBy = message.user._id;
-          const messageContent = message;
-          console.log("on message response", messageContent);
-          dispatch(addMessage(sentBy, activeChatUserId, [messageContent]));
+          dispatch(
+            addMessage(sentBy, [{ ...message, text: decryptedMessage }])
+          );
           break;
         default:
           break;
@@ -54,24 +60,21 @@ export const sendMessage = (
   activeChatUserId: string,
   messageContent: MessageContent[]
 ) => {
-  return async function (dispatch: AppDispatch) {
+  return async function (dispatch: AppDispatch, getState: () => RootState) {
     if (connection) {
+      const { chat } = getState();
+      const rsa = new RSAKey();
+      rsa.setPublicString(chat.encryptionKey);
+      const encryptedMessage = rsa.encrypt(messageContent[0].text);
       const message: SocketMessage = {
         eventName: "message",
         eventPayload: {
           to: activeChatUserId,
-          message: messageContent[0],
+          message: { ...messageContent[0], text: encryptedMessage },
         },
       };
-      console.log("sending message");
       connection.send(JSON.stringify(message));
-      dispatch(
-        addMessage(
-          messageContent[0].user._id,
-          messageContent[0].user._id,
-          messageContent
-        )
-      );
+      dispatch(addMessage(message.eventPayload.to, messageContent));
     }
   };
 };
@@ -113,6 +116,24 @@ export const removeActiveChatUserId = () => {
   };
 };
 
+export const setEncryptionKey = (key: string) => {
+  return function (dispatch: AppDispatch) {
+    console.log("encryption key", key);
+    dispatch({
+      type: SET_ACTIVE_CHAT_USER_ENCRYPTION_kEY,
+      payload: key,
+    });
+  };
+};
+
+export const removeEncryptionKey = () => {
+  return function (dispatch: AppDispatch) {
+    dispatch({
+      type: REMOVE_ACTIVE_CHAT_USER_ENCRYPTION_kEY,
+    });
+  };
+};
+
 export const setActiveChat = (activeChat: ActiveChatMessages) => {
   return function (dispatch: AppDispatch) {
     dispatch({
@@ -132,26 +153,14 @@ export const removeActiveChat = () => {
 
 export const addMessage = (
   chatUserId: string,
-  activeChatUserId: string | null,
   messageContent: MessageContent[]
 ) => {
   return async function (
-    dispatch: ThunkDispatch<RootState, {}, AnyAction>,
+    dispatch: AppDispatch,
     getState: () => RootState
   ): Promise<void> {
     const { chat } = getState();
-    console.log(
-      "add message",
-      activeChatUserId === chatUserId,
-      activeChatUserId,
-      chatUserId,
-      chat.activeChatUserId,
-      messageContent
-    );
-    if (
-      activeChatUserId === chatUserId ||
-      chatUserId === chat.activeChatUserId
-    ) {
+    if (chatUserId === chat.activeChatUserId) {
       dispatch({
         type: ADD_MESSAGE_TO_ACTIVE_CHAT,
         payload: messageContent,

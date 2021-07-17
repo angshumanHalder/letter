@@ -38,7 +38,6 @@ export const Chat: React.FC<ChatProps> = () => {
   }, []);
 
   const onSend = useCallback((messages = []) => {
-    GiftedChat.append;
     if (activeChatUserId && messages.length) {
       messages[0].createdAt = messages[0].createdAt.toString();
       dispatch(sendMessage(activeChatUserId, messages));

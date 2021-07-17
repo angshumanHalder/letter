@@ -8,7 +8,7 @@ import {
 type UserState = {
   contacts: null | ContactObj[];
   fetchContactsFailed: null | string;
-  localContacts: LocalContacts[] | [];
+  localContacts: LocalContact[] | [];
 };
 
 export const initialState: UserState = {

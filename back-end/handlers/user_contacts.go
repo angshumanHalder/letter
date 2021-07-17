@@ -47,9 +47,10 @@ func (u *User) getContacts() gin.HandlerFunc {
 		var contacts []UserContact
 		for i := range users {
 			user := UserContact{
-				Id:       users[i].Id.Hex(),
-				Username: users[i].Username,
-				Phone:    users[i].Phone,
+				Id:        users[i].Id.Hex(),
+				Username:  users[i].Username,
+				Phone:     users[i].Phone,
+				PublicKey: users[i].PublicKey,
 			}
 			contacts = append(contacts, user)
 		}
