@@ -14,3 +14,7 @@ type ContactsRequest = {
 type RequestOtpRequest = {
   phone: string;
 };
+
+type PublicKeyRequest = {
+  publicKey: string;
+};

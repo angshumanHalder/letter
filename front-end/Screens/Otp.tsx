@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, SafeAreaView } from "react-native";
 import { TextInput, Button } from "react-native-paper";
-import { verifyOtp } from "../actions/register";
+import { setPublicKey, verifyOtp } from "../actions/register";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
 import OtpStyles from "../styles/Otp";
 import { OtpNavigationProp } from "../types/navigationtypes";
@@ -30,6 +30,7 @@ export const Otp: React.FC<OtpProps> = ({ navigation }) => {
 
   useEffect(() => {
     if (verificationSuccess) {
+      dispatch(setPublicKey());
       navigation.replace("ChatAndUserFeed");
     }
   }, [verificationSuccess]);

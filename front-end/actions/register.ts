@@ -3,9 +3,11 @@ import {
   requestOtpApi,
   verifyOtpApi,
 } from "../apis/authenticate";
+import { savePublicKey } from "../apis/chat";
 import { AppDispatch } from "../configureStore";
-import { ME, TOKEN } from "../utils/constants";
-import { save } from "../utils/secureStorage";
+import { ME, PRIVATE_KEY, PUBLIC_KEY, TOKEN } from "../utils/constants";
+import { generateKeyPair } from "../utils/pkGen";
+import { getValueFor, save } from "../utils/secureStorage";
 
 export const REGISTER_USER = "REGISTER_USER";
 export const REGISTER_USER_FAILED = "REGISTER_USER_FAILED ";
@@ -13,6 +15,8 @@ export const OTP_VERIFICATION_SUCCESS = "OTP_VERIFICATION_SUCCESS";
 export const OTP_VERIFICATION_FAILED = "OTP_VERIFICATION_FAILED";
 export const OTP_REQUEST_SUCCESS = "OTP_REQUEST_SUCCESS";
 export const OTP_REQUEST_FAILED = "OTP_REQUEST_FAILED";
+export const SAVE_PUBLIC_KEY_SUCCESS = "SAVE_PUBLIC_KEY_SUCCESS";
+export const SAVE_PUBLIC_KEY_ERROR = "SAVE_PUBLIC_KEY_ERROR";
 
 export const registerUser = (payload: RegisterRequest) => {
   return async function (dispatch: AppDispatch) {
@@ -65,6 +69,27 @@ export const requestOtp = (payload: RequestOtpRequest) => {
       dispatch({
         type: OTP_REQUEST_FAILED,
         payload: "Could not request otp. Please try again in some time.",
+      });
+    }
+  };
+};
+
+export const setPublicKey = () => {
+  return async function (dispatch: AppDispatch) {
+    try {
+      if (await getValueFor(PRIVATE_KEY)) {
+        console.log("returned");
+        return;
+      }
+      const [publicKey, _] = await generateKeyPair();
+      await savePublicKey({ publicKey });
+      dispatch({
+        type: SAVE_PUBLIC_KEY_SUCCESS,
+      });
+    } catch (err) {
+      console.log(err);
+      dispatch({
+        type: SAVE_PUBLIC_KEY_ERROR,
       });
     }
   };

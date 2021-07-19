@@ -14,9 +14,8 @@ type User struct {
 }
 
 type Register struct {
-	Username  string `validate:"required"`
-	Phone     string `validate:"required"`
-	PublicKey string `validate:"required"`
+	Username string `validate:"required"`
+	Phone    string `validate:"required"`
 }
 
 type GenOtp struct {
@@ -36,6 +35,10 @@ type UserContact struct {
 	Username  string
 	Phone     string
 	PublicKey string
+}
+
+type PublicKey struct {
+	PublicKey string `json:"publicKey" validate:"required"`
 }
 
 var collection *mongo.Collection

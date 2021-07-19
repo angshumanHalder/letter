@@ -1,7 +1,8 @@
 import cloneDeep from "clone-deep";
 import React, { useCallback, useEffect, useState } from "react";
-import { View } from "react-native";
+import { KeyboardAvoidingView, Platform, View } from "react-native";
 import { Bubble, GiftedChat, Send } from "react-native-gifted-chat";
+import { SafeAreaView } from "react-native-safe-area-context";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { chatCleanUpOnUnMount, sendMessage } from "../actions/chat";

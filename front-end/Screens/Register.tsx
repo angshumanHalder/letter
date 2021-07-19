@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, SafeAreaView, View } from "react-native";
-import RegisterStyles from "../styles/Register";
-import { TextInput, Button, Text } from "react-native-paper";
+import { Button, Text, TextInput } from "react-native-paper";
 import { registerUser, requestOtp } from "../actions/register";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
-import { showToast } from "../utils/toast";
+import RegisterStyles from "../styles/Register";
 import { RegisterNavigationProp } from "../types/navigationtypes";
+import { showToast } from "../utils/toast";
 
 type RegisterState = {
   username: string;

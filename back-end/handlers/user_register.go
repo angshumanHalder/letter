@@ -29,11 +29,10 @@ func (u *User) registerHandler() gin.HandlerFunc {
 		}
 
 		user := Schema.UserSchema{
-			Id:        primitive.NewObjectID(),
-			Username:  reqBody.Username,
-			Phone:     reqBody.Phone,
-			PublicKey: reqBody.PublicKey,
-			Verified:  false,
+			Id:       primitive.NewObjectID(),
+			Username: reqBody.Username,
+			Phone:    reqBody.Phone,
+			Verified: false,
 		}
 		_, err = collection.InsertOne(ctx, user)
 		if err != nil {
