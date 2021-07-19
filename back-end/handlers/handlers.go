@@ -9,7 +9,7 @@ import (
 
 func UserHandlers(r *gin.Engine, database *mongo.Database, pool *redis.Pool) {
 	user := &User{DB: database, Pool: pool}
-	chat := &Chat{}
+	chat := &Chat{pool: pool}
 	user.Initialize()
 	r.POST("/user", user.registerHandler())
 	r.GET("/user", middlewares.AuthMiddleware(), user.getUser())

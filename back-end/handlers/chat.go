@@ -5,10 +5,12 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 	"github.com/gorilla/websocket"
 )
 
 type Chat struct {
+	pool *redis.Pool
 }
 
 var upgrader = websocket.Upgrader{
@@ -26,7 +28,7 @@ func socketRequestHandler(hub *Hub, user_id string, w http.ResponseWriter, r *ht
 }
 
 func (ch *Chat) InitializeConn() gin.HandlerFunc {
-	hub := NewHub()
+	hub := NewHub(ch.pool)
 	go hub.Run()
 	return func(c *gin.Context) {
 		user_id, ok := c.Get("user_id")
