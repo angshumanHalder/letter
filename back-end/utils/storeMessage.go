@@ -20,6 +20,7 @@ func StoreMessage(pool *redis.Pool, userId string, data interface{}) {
 			return
 		}
 		conn.Do("SET", userId, out)
+		conn.Do("EXPIRE", userId, 60*60*24)
 		return
 	}
 	b := []byte(val)
@@ -33,6 +34,7 @@ func StoreMessage(pool *redis.Pool, userId string, data interface{}) {
 		return
 	}
 	conn.Do("SET", userId, out)
+	conn.Do("EXPIRE", userId, 60*60*24)
 	log.Println("Message if present")
 	log.Println(messages...)
 }

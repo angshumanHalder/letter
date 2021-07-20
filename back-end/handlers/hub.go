@@ -33,6 +33,7 @@ func (hub *Hub) Run() {
 }
 
 func HandleUserRegisterEvent(hub *Hub, client *Client) {
+	// if the client has messages loop through them and send them.
 	hub.clients[client.userId] = client
 }
 
