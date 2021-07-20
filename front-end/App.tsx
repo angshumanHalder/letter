@@ -5,7 +5,6 @@ import { theme } from "./CustomProperties/Theme";
 import { Provider } from "react-redux";
 import { store } from "./configureStore";
 import { Navigation } from "./Navigation";
-import { useEffect } from "react";
 
 export default function App() {
   return (

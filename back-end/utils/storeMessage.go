@@ -15,6 +15,7 @@ func StoreMessage(pool *redis.Pool, userId string, data interface{}) {
 	val, _ := redis.String(conn.Do("GET", userId))
 	if val == "" {
 		messages = append(messages, data)
+		log.Println(messages...)
 		out, error := json.Marshal(messages)
 		if error != nil {
 			return

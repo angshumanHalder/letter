@@ -35,6 +35,17 @@ func (hub *Hub) Run() {
 func HandleUserRegisterEvent(hub *Hub, client *Client) {
 	// if the client has messages loop through them and send them.
 	hub.clients[client.userId] = client
+	messages := utils.GetMessage(hub.pool, client.userId)
+	if messages == nil {
+		return
+	}
+	for _, message := range messages {
+		messageStruct := &SocketEventStruct{
+			EventName:    "message",
+			EventPayload: message,
+		}
+		handleSocketPayloadEvents(client, *messageStruct)
+	}
 }
 
 func HandleUserDisconnectEvent(hub *Hub, client *Client) {

@@ -86,6 +86,7 @@ export const chatReducer: Reducer<ChatState> = (
           allChats[action.payload.chatUserId]!.messages
         );
       allChats[action.payload.chatUserId]!.new = true;
+      console.log("all chats", allChats);
       return {
         ...state,
         chats: allChats,

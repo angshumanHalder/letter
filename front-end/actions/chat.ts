@@ -38,12 +38,12 @@ export const createSocketConnection = async (dispatch: AppDispatch) => {
           }
           const rsa = new RSAKey();
           const privateKey = await getValueFor(PRIVATE_KEY);
-          const publicKey = await getValueFor(PUBLIC_KEY);
+          // const publicKey = await getValueFor(PUBLIC_KEY);
           rsa.setPrivateString(privateKey);
-          console.log("on receive message");
-          console.log("MY PRIVATE KEY", privateKey);
-          console.log("\n\n\n");
-          console.log("MY PUBLIC KEY", publicKey);
+          // console.log("on receive message");
+          // console.log("MY PRIVATE KEY", privateKey);
+          // console.log("\n\n\n");
+          // console.log("MY PUBLIC KEY", publicKey);
           const message: MessageContent = socketPayload.eventPayload.message;
           const decryptedMessage = rsa.decrypt(message.text);
           console.log(decryptedMessage);
@@ -69,16 +69,16 @@ export const sendMessage = (
     if (connection) {
       const { chat } = getState();
       const rsa = new RSAKey();
-      const privateKey = await getValueFor(PRIVATE_KEY);
-      const publicKey = await getValueFor(PUBLIC_KEY);
+      // const privateKey = await getValueFor(PRIVATE_KEY);
+      // const publicKey = await getValueFor(PUBLIC_KEY);
       rsa.setPublicString(chat.encryptionKey);
       const encryptedMessage = rsa.encrypt(messageContent[0].text);
-      console.log("on send message");
-      console.log("ENCRYPTED PUBLIC KEY", chat.encryptionKey);
-      console.log("\n\n\n");
-      console.log("MY PRIVATE KEY", privateKey);
-      console.log("\n\n\n");
-      console.log("MY PUBLICK KEY", publicKey);
+      // console.log("on send message");
+      // console.log("ENCRYPTED PUBLIC KEY", chat.encryptionKey);
+      // console.log("\n\n\n");
+      // console.log("MY PRIVATE KEY", privateKey);
+      // console.log("\n\n\n");
+      // console.log("MY PUBLICK KEY", publicKey);
       const message: SocketMessage = {
         eventName: "message",
         eventPayload: {

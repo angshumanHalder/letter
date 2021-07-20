@@ -1,8 +1,6 @@
 package utils
 
 import (
-	"fmt"
-
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
@@ -10,7 +8,6 @@ import (
 )
 
 var (
-	uni      *ut.UniversalTranslator
 	validate *validator.Validate
 )
 
@@ -21,7 +18,7 @@ func translateError(err error, trans ut.Translator) (errs []string) {
 
 	validatorErrs := err.(validator.ValidationErrors)
 	for _, e := range validatorErrs {
-		translatedErrs := fmt.Sprintf(e.Translate(trans))
+		translatedErrs := e.Translate(trans)
 		errs = append(errs, translatedErrs)
 	}
 	return errs
