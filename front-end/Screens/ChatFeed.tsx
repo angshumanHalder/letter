@@ -24,6 +24,7 @@ export const ChatFeed: React.FC<ChatFeedProps> = () => {
   const [messages, setMessages] = useState<ChatItem[]>();
 
   useEffect(() => {
+    console.log("Chats", chats);
     if (chats && localContacts.length) {
       const messages = [];
       const keys = Object.keys(chats);
@@ -39,15 +40,17 @@ export const ChatFeed: React.FC<ChatFeedProps> = () => {
       console.log("id key maping", idToNameMapping);
       console.log("localContacts", localContacts);
       for (let key of keys) {
+        if (chats[key]) {
+          const message: ChatItem = {
+            id: key,
+            userName: idToNameMapping[key].name,
+            messageText: chats[key]!.messages[0].text,
+            new: chats[key]!.new,
+            publicKey: idToNameMapping[key].publicKey,
+          };
+          messages.push(message);
+        }
         // console.log("chat feed chats", idToNameMapping[key]);
-        const message: ChatItem = {
-          id: key,
-          userName: idToNameMapping[key].name,
-          messageText: chats[key]!.messages[0].text,
-          new: chats[key]!.new,
-          publicKey: idToNameMapping[key].publicKey,
-        };
-        messages.push(message);
         // console.log("text of message", chats[key]?.messages, chats);
       }
       // console.log("chat feed", chats);

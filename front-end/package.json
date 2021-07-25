@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@akeo/react-native-rsa-encryption": "^1.0.3",
+    "@react-native-async-storage/async-storage": "^1.15.5",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.9.4",
     "@react-navigation/stack": "^5.14.5",
@@ -34,10 +35,12 @@
     "react-native-web": "~0.17.1",
     "react-redux": "^7.2.4",
     "redux": "^4.1.0",
+    "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.14.6",
+    "@types/": "react-native-async-storage/async-storage",
     "@types/clone-deep": "^4.0.1",
     "@types/react": "~17.0.14",
     "@types/react-native": "~0.64.12",

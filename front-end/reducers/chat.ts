@@ -31,10 +31,7 @@ export const initialState: ChatState = {
   chatsFetchError: null,
 };
 
-export const chatReducer: Reducer<ChatState> = (
-  state = initialState,
-  action: AnyAction
-) => {
+export const chatReducer: Reducer<ChatState> = (state = initialState, action: AnyAction) => {
   switch (action.type) {
     case FETCH_ALL_CHATS_FROM_STORAGE_SUCCESS:
       return {
@@ -81,12 +78,10 @@ export const chatReducer: Reducer<ChatState> = (
           },
         };
       }
-      allChats[action.payload.chatUserId]!.messages =
-        action.payload.messageContent.concat(
-          allChats[action.payload.chatUserId]!.messages
-        );
+      allChats[action.payload.chatUserId]!.messages = action.payload.messageContent.concat(
+        allChats[action.payload.chatUserId]!.messages
+      );
       allChats[action.payload.chatUserId]!.new = true;
-      console.log("all chats", allChats);
       return {
         ...state,
         chats: allChats,

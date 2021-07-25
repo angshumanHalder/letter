@@ -5,8 +5,8 @@ import { ChatFeed } from "./ChatFeed";
 import { Users } from "./Users";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
 import { getContacts, saveLocalContactsToStore } from "../actions/users";
-import { getValueFor, save } from "../utils/secureStorage";
-import { PRIVATE_KEY, PUBLIC_KEY, USERS } from "../utils/constants";
+import { save } from "../utils/secureStorage";
+import { USERS } from "../utils/constants";
 
 export const ChatUserScreens = () => {
   const contacts = useAppSelector((state) => state.contacts.contacts);
