@@ -8,8 +8,6 @@ import {
 import { CustomItem } from "../Components/Item";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
 import UserStyles from "../styles/Users";
-import { USERS } from "../utils/constants";
-import { getValueFor } from "../utils/secureStorage";
 import { showToast } from "../utils/toast";
 
 interface UserProps {}
@@ -35,14 +33,7 @@ export const Users: React.FC<UserProps> = () => {
 
   useEffect(() => {
     if (fetchContactsFailed) {
-      (async function () {
-        const storageContacts = await getValueFor(USERS);
-        if (storageContacts) {
-          const json = JSON.parse(storageContacts);
-          setContacts(json);
-        }
-        showToast(fetchContactsFailed);
-      })();
+      showToast(fetchContactsFailed);
     }
   }, [fetchContactsFailed]);
 

@@ -3,16 +3,19 @@ import { StatusBar } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { theme } from "./CustomProperties/Theme";
 import { Provider } from "react-redux";
-import { store } from "./configureStore";
+import { store, persistor } from "./configureStore";
 import { Navigation } from "./Navigation";
+import { PersistGate } from "redux-persist/integration/react";
 
 export default function App() {
   return (
     <Provider store={store}>
-      <PaperProvider theme={theme}>
-        <StatusBar />
-        <Navigation />
-      </PaperProvider>
+      <PersistGate loading={null} persistor={persistor}>
+        <PaperProvider theme={theme}>
+          <StatusBar />
+          <Navigation />
+        </PaperProvider>
+      </PersistGate>
     </Provider>
   );
 }
