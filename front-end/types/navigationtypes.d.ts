@@ -13,8 +13,6 @@ type RouteStackParamsList = {
   Chat: { userId: string };
 };
 
-type ChatScreenRouteProp = RouteProp<RouteStackParamsList, "Chat">;
-
 type RegisterNavigationProp = StackNavigationProp<StackParamsList, "Register">;
 
 type OtpNavigationProp = StackNavigationProp<StackParamsList, "OTP">;

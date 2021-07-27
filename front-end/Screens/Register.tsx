@@ -5,6 +5,8 @@ import { registerUser, requestOtp } from "../actions/register";
 import { useAppDispatch, useAppSelector } from "../hooks/reducerHooks";
 import RegisterStyles from "../styles/Register";
 import { RegisterNavigationProp } from "../types/navigationtypes";
+import { TOKEN } from "../utils/constants";
+import { getValueFor } from "../utils/secureStorage";
 import { showToast } from "../utils/toast";
 
 type RegisterState = {
@@ -22,12 +24,7 @@ interface RegisterProps {
 }
 
 export const Register: React.FC<RegisterProps> = ({ navigation }) => {
-  const {
-    registerSuccess,
-    registerError,
-    requestOtpSuccess,
-    requestOtpFailed,
-  } = useAppSelector((state) => ({
+  const { registerSuccess, registerError, requestOtpSuccess, requestOtpFailed } = useAppSelector((state) => ({
     registerSuccess: state.register.success,
     registerError: state.register.registerError,
     requestOtpSuccess: state.register.otpRequestSuccess,
@@ -106,11 +103,7 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
           mode="flat"
           keyboardType="numeric"
         />
-        <Button
-          style={RegisterStyles.button}
-          onPress={onRegisterOrLoginHandler}
-          mode="contained"
-        >
+        <Button style={RegisterStyles.button} onPress={onRegisterOrLoginHandler} mode="contained">
           {isRegister ? "Register" : "Login"}
         </Button>
         <Text
@@ -119,10 +112,7 @@ export const Register: React.FC<RegisterProps> = ({ navigation }) => {
             setIsRegister(!isRegister);
           }}
         >
-          or{" "}
-          <Text style={RegisterStyles.linkText}>
-            {isRegister ? "login" : "register"}
-          </Text>
+          or <Text style={RegisterStyles.linkText}>{isRegister ? "login" : "register"}</Text>
         </Text>
       </View>
     </SafeAreaView>

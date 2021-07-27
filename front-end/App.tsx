@@ -7,7 +7,7 @@ import { store, persistor } from "./configureStore";
 import { Navigation } from "./Navigation";
 import { PersistGate } from "redux-persist/integration/react";
 
-export default function App() {
+export default function App({ navigation }) {
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
